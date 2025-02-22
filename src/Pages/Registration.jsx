@@ -48,7 +48,7 @@ const Registration = () => {
       const user = { name, email, team, photoURL, role: 'member' };
   
       // Send user info to backend (store in database)
-      const response = await fetch(`http://localhost:9000/users/${email}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${email}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ const Registration = () => {
       // Check if the user object is valid
       if (user) {
         // Prepare user data for backend
-        const response = await fetch(`http://localhost:9000/users/${user.email}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${user.email}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

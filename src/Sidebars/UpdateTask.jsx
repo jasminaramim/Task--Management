@@ -20,8 +20,7 @@ const UpdateTask = () => {
     // Fetch the task by ID
     const fetchTask = async () => {
       try {
-        const response = await axios.get(`http://localhost:9000/tasks/${id}`);
-        console.log('Fetched Task:', response.data); // Debugging the fetched task
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/tasks/${id}`);
         if (response.status === 200) {
           setTask(response.data); // Pre-populate form with the current task data
         }
@@ -39,17 +38,13 @@ const UpdateTask = () => {
   const handleUpdateTask = async (e) => {
     e.preventDefault();
 
-    // Log the current task data before submitting
-    console.log('Updated Task Data before sending to API:', task);
-
     try {
-      const response = await axios.put(`http://localhost:9000/tasks/${id}`, task);
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/tasks/${id}`, task);
       if (response.status === 200) {
         toast.success('Task updated successfully!');
 
         // Fetch updated data after update and log it
-        const updatedResponse = await axios.get(`http://localhost:9000/tasks/${id}`);
-        console.log('Updated Task Data:', updatedResponse.data);
+        const updatedResponse = await axios.get(`${import.meta.env.VITE_API_URL}/tasks/${id}`);
         setTask(updatedResponse.data);
 
         navigate('/dashboard/tasks'); // Navigate back to the task list
@@ -72,7 +67,7 @@ const UpdateTask = () => {
           <label className="block text-sm font-medium">Title</label>
           <input
             type="text"
-            value={task.task.title} // Directly use the task data
+            value={task.title} // Correct access to task data
             onChange={(e) => setTask((prevTask) => ({ ...prevTask, title: e.target.value }))}
             placeholder="Enter task title"
             className="px-3 py-2 border rounded w-full"
@@ -84,7 +79,7 @@ const UpdateTask = () => {
         <div>
           <label className="block text-sm font-medium">Description</label>
           <textarea
-            value={task.task.description} // Directly use the task data
+            value={task.description} // Correct access to task data
             onChange={(e) => setTask((prevTask) => ({ ...prevTask, description: e.target.value }))}
             placeholder="Enter task description"
             className="px-3 py-2 border rounded w-full"
@@ -96,7 +91,7 @@ const UpdateTask = () => {
           <div className="w-1/2">
             <label className="block text-sm font-medium">Status</label>
             <select
-              value={task.task.status} // Directly use the task data
+              value={task.status} // Correct access to task data
               onChange={(e) => setTask((prevTask) => ({ ...prevTask, status: e.target.value }))}
               className="px-3 py-2 border rounded w-full"
             >
@@ -108,7 +103,7 @@ const UpdateTask = () => {
           <div className="w-1/2">
             <label className="block text-sm font-medium">Priority</label>
             <select
-              value={task.task.priority} // Directly use the task data
+              value={task.priority} // Correct access to task data
               onChange={(e) => setTask((prevTask) => ({ ...prevTask, priority: e.target.value }))}
               className="px-3 py-2 border rounded w-full"
             >
@@ -123,7 +118,7 @@ const UpdateTask = () => {
           <label className="block text-sm font-medium">Due Date</label>
           <input
             type="date"
-            value={task.task.dueDate} // Directly use the task data
+            value={task.dueDate} // Correct access to task data
             onChange={(e) => setTask((prevTask) => ({ ...prevTask, dueDate: e.target.value }))}
             className="px-3 py-2 border rounded w-full"
             required

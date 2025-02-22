@@ -115,7 +115,7 @@ const Tasks = () => {
                 setTaskDueDate('');
                 setIsModalOpen(false);
             } else {
-                toast.error('Error creating task.');
+                toast.error('NO Tasks available here, please create some tasks.');
             }
         } catch (error) {
             console.error('Error submitting the task:', error);
@@ -130,44 +130,34 @@ const Tasks = () => {
     const handleModalOpen = () => setIsModalOpen(true);
     const handleModalClose = () => setIsModalOpen(false);
 
-    const handleDeleteTask = async (id) => {
-        // First, check if the task ID exists
-        if (!id) {
-            toast.error('Invalid task ID');
-            return;
+   // 🗑️ Delete Task Handler with SweetAlert confirmation
+   const handleDeleteTask = async (taskId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to recover this task!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.delete(`${import.meta.env.VITE_API_URL}/tasks/${taskId}`);
+          
+          if (response.status === 200) {
+            toast.success("Task deleted successfully");
+            setTasks(tasks.filter((task) => task._id !== taskId));
+          } else {
+            toast.error("Failed to delete task");
+          }
+        } catch (error) {
+          console.error("Error deleting task:", error);
+          toast.error("Error deleting task");
         }
-
-        // Show SweetAlert confirmation dialog
-        const result = await Swal.fire({
-            title: 'Are you sure?',
-            text: "This action cannot be undone!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'No, keep it',
-            reverseButtons: true
-        });
-
-        if (result.isConfirmed) {
-            // Proceed with task deletion if confirmed
-            try {
-                const response = await axios.delete(`${import.meta.env.VITE_API_URL}/${id}`);
-                if (response.status === 200) {
-                    toast.success('Task deleted successfully!');
-                    // Remove the task from the tasks list in both views (list and board)
-                    setTasks(tasks.filter(task => task._id !== id));
-                } else {
-                    toast.error('Error deleting task');
-                }
-            } catch (error) {
-                console.error('Error deleting task:', error);
-                toast.error('Failed to delete task');
-            }
-        } else {
-            // If user cancels the deletion
-            toast.info('Task deletion was canceled');
-        }
-    };
+      }
+    });
+  };
 
 
 
