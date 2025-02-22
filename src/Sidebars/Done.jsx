@@ -23,7 +23,7 @@ const Done = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:9000/tasks/email/${userEmail}`
+          `${import.meta.env.VITE_API_URL}/tasks/email/${userEmail}`
         );
 
         if (response.status === 200) {
@@ -39,8 +39,8 @@ const Done = () => {
           toast.error("No tasks found");
         }
       } catch (error) {
-        console.error("Error fetching tasks:", error);
-        toast.error("Error fetching completed tasks");
+        console.error("No completed tasks found", error);
+        toast.error("No completed tasks found");
       } finally {
         setLoading(false);
       }
@@ -66,7 +66,7 @@ const Done = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.delete(`http://localhost:9000/tasks/${taskId}`);
+          const response = await axios.delete(`${import.meta.env.VITE_API_URL}/tasks/${taskId}`);
           
           if (response.status === 200) {
             toast.success("Task deleted successfully");

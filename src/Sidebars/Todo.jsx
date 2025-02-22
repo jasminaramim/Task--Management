@@ -23,7 +23,7 @@ const Todo = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:9000/tasks/email/${userEmail}`
+          `${import.meta.env.VITE_API_URL}/tasks/email/${userEmail}`
         );
 
         if (response.status === 200) {
@@ -67,7 +67,7 @@ const Todo = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.delete(`http://localhost:9000/tasks/${taskId}`);
+          const response = await axios.delete(`${import.meta.env.VITE_API_URL}/tasks/${taskId}`);
           
           if (response.status === 200) {
             toast.success("Task deleted successfully");

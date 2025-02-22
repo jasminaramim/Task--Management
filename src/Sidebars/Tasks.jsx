@@ -32,7 +32,7 @@ const Tasks = () => {
           }
       
           try {
-            const response = await axios.get(`http://localhost:9000/tasks/email/${user?.email}`);
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/tasks/email/${user?.email}`);
             
             // Handle successful response
             if (response.status === 200) {
@@ -65,9 +65,7 @@ const Tasks = () => {
         return <div>Loading...</div>;  // Display loading state
     }
     
-    if (tasks.length === 0) {
-        return <div>No tasks available</div>;  // Display message when no tasks exist
-    }
+   
     
     
 
@@ -75,24 +73,31 @@ const Tasks = () => {
         setViewMode(viewMode === 'list' ? 'board' : 'list');
     };
 
+ 
     const handleCreateTask = async (e) => {
         e.preventDefault();  // Prevent the form from refreshing the page
-        
+    
+        // Validate title length before proceeding
+        if (newTask.length > 50) {
+            toast.error('Title cannot exceed 50 characters');
+            return;
+        }
+    
         const newTaskObj = {
             title: newTask,
             description: taskDescription,
-            status: taskCategory,
+            status: taskCategory,  // Status will be "To-Do", "In Progress", or "Completed"
             priority: taskPriority,
             dueDate: taskDueDate,
-            timestamp: new Date().toLocaleString(),
+            timestamp: new Date().toLocaleString(),  // Auto-generated timestamp
             email: userEmail,  // Add user email to the task object
         };
-      
+    
         // Optimistic update: add the task to the tasks state before making the API call
         setTasks((prevTasks) => [...prevTasks, { ...newTaskObj, _id: 'temp-id' }]);  // You can add a temporary ID or leave it until the server responds
-      
+    
         try {
-            const response = await axios.post('http://localhost:9000/tasks', newTaskObj);
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/tasks`, newTaskObj);
     
             if (response.status === 200) {
                 toast.success('Task created successfully!');
@@ -102,6 +107,7 @@ const Tasks = () => {
                         task._id === 'temp-id' ? { ...task, _id: response.data._id } : task
                     )
                 );
+                // Reset form fields
                 setNewTask('');
                 setTaskDescription('');
                 setTaskCategory('To-Do');
@@ -118,7 +124,6 @@ const Tasks = () => {
             setTasks((prevTasks) => prevTasks.filter((task) => task._id !== 'temp-id'));
         }
     };
-    
     
     
 
@@ -146,7 +151,7 @@ const Tasks = () => {
         if (result.isConfirmed) {
             // Proceed with task deletion if confirmed
             try {
-                const response = await axios.delete(`http://localhost:9000/tasks/${id}`);
+                const response = await axios.delete(`${import.meta.env.VITE_API_URL}/${id}`);
                 if (response.status === 200) {
                     toast.success('Task deleted successfully!');
                     // Remove the task from the tasks list in both views (list and board)
@@ -278,75 +283,76 @@ const Tasks = () => {
                     <div className="bg-white p-6 rounded-lg shadow-lg w-96">
                         <h2 className="text-xl font-semibold mb-4">Create New Task</h2>
                         <form onSubmit={handleCreateTask}>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Title</label>
-                                <input
-                                    type="text"
-                                    value={newTask}
-                                    onChange={(e) => setNewTask(e.target.value)}
-                                    placeholder="Task Title"
-                                    className="px-3 py-2 border rounded w-full"
-                                    maxLength="50"
-                                    required
-                                />
-                            </div>
-                            <div className="flex gap-4">
-                                <div className="mb-4 w-1/2">
-                                    <label className="block text-sm font-medium mb-2">Description (optional)</label>
-                                    <textarea
-                                        value={taskDescription}
-                                        onChange={(e) => setTaskDescription(e.target.value)}
-                                        placeholder="Task Description"
-                                        className="px-3 py-2 border rounded w-full"
-                                        maxLength="200"
-                                    />
-                                </div>
-                                <div className="mb-4 w-1/2">
-                                    <label className="block text-sm font-medium mb-2">Category</label>
-                                    <select
-                                        value={taskCategory}
-                                        onChange={(e) => setTaskCategory(e.target.value)}
-                                        className="px-3 py-2 border rounded w-full"
-                                    >
-                                        <option value="To-Do">To-Do</option>
-                                        <option value="In Progress">In Progress</option>
-                                        <option value="Completed">Completed</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="flex gap-4">
-                                <div className="mb-4 w-1/2">
-                                    <label className="block text-sm font-medium mb-2">Priority</label>
-                                    <select
-                                        value={taskPriority}
-                                        onChange={(e) => setTaskPriority(e.target.value)}
-                                        className="px-3 py-2 border rounded w-full"
-                                    >
-                                        <option value="Low">Low</option>
-                                        <option value="Medium">Medium</option>
-                                        <option value="High">High</option>
-                                    </select>
-                                </div>
-                                <div className="mb-4 w-1/2">
-                                    <label className="block text-sm font-medium mb-2">Due Date</label>
-                                    <input
-                                        type="date"
-                                        value={taskDueDate}
-                                        onChange={(e) => setTaskDueDate(e.target.value)}
-                                        className="px-3 py-2 border rounded w-full"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <div className="flex justify-between">
-                                <button type="button" onClick={handleModalClose} className="px-4 py-2 bg-gray-300 rounded-lg">
-                                    Cancel
-                                </button>
-                                <button type="submit" className="px-4 py-2 bg-blue-600 text-white">
-                                    Create Task
-                                </button>
-                            </div>
-                        </form>
+    <div className="mb-4">
+        <label className="block text-sm font-medium mb-2">Title</label>
+        <input
+            type="text"
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+            placeholder="Task Title"
+            className="px-3 py-2 border rounded w-full"
+            maxLength="50"  // Max 50 characters
+            required
+        />
+    </div>
+    <div className="flex gap-4">
+        <div className="mb-4 w-1/2">
+            <label className="block text-sm font-medium mb-2">Description (optional)</label>
+            <textarea
+                value={taskDescription}
+                onChange={(e) => setTaskDescription(e.target.value)}
+                placeholder="Task Description"
+                className="px-3 py-2 border rounded w-full"
+                maxLength="200"  // Max 200 characters
+            />
+        </div>
+        <div className="mb-4 w-1/2">
+            <label className="block text-sm font-medium mb-2">Category</label>
+            <select
+                value={taskCategory}
+                onChange={(e) => setTaskCategory(e.target.value)}
+                className="px-3 py-2 border rounded w-full"
+            >
+                <option value="To-Do">To-Do</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>  {/* Change to 'Done' if preferred */}
+            </select>
+        </div>
+    </div>
+    <div className="flex gap-4">
+        <div className="mb-4 w-1/2">
+            <label className="block text-sm font-medium mb-2">Priority</label>
+            <select
+                value={taskPriority}
+                onChange={(e) => setTaskPriority(e.target.value)}
+                className="px-3 py-2 border rounded w-full"
+            >
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>
+        </div>
+        <div className="mb-4 w-1/2">
+            <label className="block text-sm font-medium mb-2">Due Date</label>
+            <input
+                type="date"
+                value={taskDueDate}
+                onChange={(e) => setTaskDueDate(e.target.value)}
+                className="px-3 py-2 border rounded w-full"
+                required
+            />
+        </div>
+    </div>
+    <div className="flex justify-between">
+        <button type="button" onClick={handleModalClose} className="px-4 py-2 bg-gray-300 rounded-lg">
+            Cancel
+        </button>
+        <button type="submit" className="px-4 py-2 bg-blue-600 text-white">
+            Create Task
+        </button>
+    </div>
+</form>
+
                     </div>
                 </div>
             )}
