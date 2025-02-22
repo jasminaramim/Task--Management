@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AiOutlineBars, AiOutlineClose } from 'react-icons/ai';
-import { FaTasks, FaUserCircle } from 'react-icons/fa';
-import { GrLogout } from 'react-icons/gr';
+import { FaTachometerAlt, FaList, FaClipboardList, FaCheckCircle, FaUserCircle, FaCog } from 'react-icons/fa'; // Different icons for each route
+import { GrInProgress, GrLogout } from 'react-icons/gr';
 import logo from '../assets/Images/Screenshot_2025-02-20_230759-removebg-preview.png'; 
 import useAuth from '../Hooks/useAuth'; 
+import { MdOutlineAirlineStops } from 'react-icons/md';
 
 const Sidebar = () => {
   const [isActive, setActive] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { logOut } = useAuth();
 
   const handleToggle = () => {
@@ -21,6 +23,8 @@ const Sidebar = () => {
       navigate('/');
     }, 500);
   };
+
+  const isActiveLink = (path) => location.pathname === path ? 'bg-gray-700' : '';
 
   return (
     <>
@@ -40,27 +44,45 @@ const Sidebar = () => {
           </div>
 
           <div className="space-y-4">
-            <Link to="/dashboard" className="flex items-center px-4 py-2 hover:bg-gray-700 rounded-md">
-              <FaTasks className="mr-3" />
+            <Link 
+              to="/dashboard" 
+              className={`flex items-center px-4 py-2 rounded-md ${isActiveLink('/dashboard')}`}
+            >
+              <FaTachometerAlt className="mr-3" />
               Dashboard
             </Link>
-            <Link to="/dashboard/tasks" className="flex items-center px-4 py-2 hover:bg-gray-700 rounded-md">
-              <FaTasks className="mr-3" />
+            <Link 
+              to="/dashboard/tasks" 
+              className={`flex items-center px-4 py-2 rounded-md ${isActiveLink('/dashboard/tasks')}`}
+            >
+              <FaClipboardList className="mr-3" />
               Tasks
             </Link>
-            <Link to="/dashboard/todo" className="flex items-center px-4 py-2 hover:bg-gray-700 rounded-md">
-              <FaTasks className="mr-3" />
+            <Link 
+              to="/dashboard/todo" 
+              className={`flex items-center px-4 py-2 rounded-md ${isActiveLink('/dashboard/todo')}`}
+            >
+              <MdOutlineAirlineStops className="mr-3" /> 
               To-Do
             </Link>
-            <Link to="/dashboard/in-progress" className="flex items-center px-4 py-2 hover:bg-gray-700 rounded-md">
-              <FaTasks className="mr-3" />
+            <Link 
+              to="/dashboard/in-progress" 
+              className={`flex items-center px-4 py-2 rounded-md ${isActiveLink('/dashboard/in-progress')}`}
+            >
+              <GrInProgress className="mr-3"  />
               In Progress
             </Link>
-            <Link to="/dashboard/done" className="flex items-center px-4 py-2 hover:bg-gray-700 rounded-md">
-              <FaTasks className="mr-3" />
+            <Link 
+              to="/dashboard/done" 
+              className={`flex items-center px-4 py-2 rounded-md ${isActiveLink('/dashboard/done')}`}
+            >
+              <FaCheckCircle className="mr-3" />
               Done
             </Link>
-            <Link to="/dashboard/profile" className="flex items-center px-4 py-2 hover:bg-gray-700 rounded-md">
+            <Link 
+              to="/dashboard/profile" 
+              className={`flex items-center px-4 py-2 rounded-md ${isActiveLink('/dashboard/profile')}`}
+            >
               <FaUserCircle className="mr-3" />
               Profile
             </Link>
