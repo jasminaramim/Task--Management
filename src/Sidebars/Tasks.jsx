@@ -47,7 +47,7 @@ const Tasks = () => {
             }
           } catch (error) {
             console.error('Error fetching tasks:', error);
-            toast.error('Failed to fetch tasks');
+            toast.error('no task available here , please create a new task ');
           } finally {
             setLoading(false);  // End loading state
           }

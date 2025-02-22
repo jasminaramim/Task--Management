@@ -2,9 +2,9 @@
 ---
 
 # Task Management Application
-![Task Management Website Screenshot](./src/assets/Images/Screenshot%202025-02-22%20194752.png)
-![Task Management Website Screenshot](./src/assets/images/Screenshot%202025-02-22%20194815.png)
-![Task Management Website Screenshot](./src/assets/images/Screenshot%202025-02-22%20194908.png)
+![Task Management Website Screenshot](./public/assets/Images/Screenshot%202025-02-22%20194752.png)
+![Task Management Website Screenshot](./public/assets/images/Screenshot%202025-02-22%20194815.png)
+![Task Management Website Screenshot](./public/assets/images/Screenshot%202025-02-22%20194908.png)
 ## Short Description
 
 This is a Task Management Application built with React, Axios, and Tailwind CSS that allows users to create, view, update, and delete tasks. Each task can have a title, description, status, priority, and due date. The application interacts with a RESTful API for CRUD operations.
