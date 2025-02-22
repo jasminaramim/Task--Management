@@ -1,5 +1,4 @@
 
----
 
 # Task Management Application
 ![Task Management Website Screenshot](./src/assets/Images/img2.png)
@@ -61,6 +60,3 @@ This project depends on the following libraries:
 - **react-router-dom** - For routing and navigation within the app.
 - **MongoDb** - Backend runtime for the RESTful API.
 
----
-
-Feel free to adjust the **Live Links** and any other details based on your project’s specifics.
